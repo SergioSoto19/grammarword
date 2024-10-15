@@ -6,12 +6,14 @@ class Grammar:
         self.productions = {}
 
     def set_data(self, terminals, non_terminals, axiom, productions):
+        # """Establecer los datos de la gramática."""
         self.terminals = terminals
         self.non_terminals = non_terminals
         self.axiom = axiom
         self.productions = productions
 
     def add_production(self, non_terminal, production):
+        #  """Añadir una producción a un no terminal."""
         if non_terminal in self.productions:
             self.productions[non_terminal].append(production)
         else:
@@ -19,6 +21,7 @@ class Grammar:
 
 
     def parse_productions(self, productions_text):
+        # Analizar y agregar producciones desde el texto dado
         try:
             for production in productions_text.split(';'):
                 left, right = production.split(',')
@@ -39,33 +42,94 @@ class Grammar:
             print(f"{left} -> {' | '.join(rights)}")
 
      
+ 
     def derive(self, word):
-        
         def derive_step(current_string, target_word, steps, productions_used):
+            print(f"Derivando: {current_string} | Objetivo: {target_word}")  # Mostrar estado actual
+            # Si la cadena actual es igual a la palabra objetivo, hemos tenido éxito
             if current_string == target_word:
                 return True, steps, productions_used
+            
+            # Si la longitud de la cadena actual es mayor que la de la palabra objetivo, falla
             if len(current_string) > len(target_word):
                 return False, steps, productions_used
-            
+
             for i, symbol in enumerate(current_string):
                 if symbol in self.non_terminals:
                     for production in self.productions[symbol]:
-                        new_string = current_string[:i] + production + current_string[i+1:]
+                        # Si la producción es λ, eliminamos el símbolo no terminal
+                        if production == 'λ':
+                            print("esssAntenewna", new_string)
+                            print("esss actual ", current_string)
+                            print("coje el valor antes de la cadena ", current_string[:i])
+                            print("coje el valor despues de la cadena ", current_string[i + 1:])
+                            print("es", i )
+                            new_string = current_string[:i] + current_string[i + 1:]
+                            print("esss", new_string)
+                        else:
+                            new_string = current_string[:i] + production + current_string[i + 1:]
+
                         steps.append(f"{current_string} -> {new_string}")
                         productions_used.append(f"{symbol} -> {production}")
+
+                        # Intentamos derivar desde la nueva cadena
                         success, result_steps, result_productions = derive_step(new_string, target_word, steps, productions_used)
+
                         if success:
                             return True, result_steps, result_productions
-                        steps.pop()  # Retroceder si el paso no lleva a la solución
-                        productions_used.pop()  # Retroceder la producción también
+                        # Retrocedemos si la derivación no fue exitosa
+                        steps.pop()
+                        productions_used.pop()
+
             return False, steps, productions_used
 
         success, steps, productions_used = derive_step(self.axiom, word, [], [])
         derivations = list(zip(productions_used, steps))
 
         print(f"\nDerivación para la palabra '{word}':")
-        print(derivations, "\n estado derivacion: ", success) 
+        for production, step in derivations:
+            print(f"{production}: {step}")
+        print("\nEstado de derivación:", success)
         
         return derivations, success
 
-      
+
+
+# Ejemplo de uso
+grammar = Grammar()
+grammar.set_data(
+    terminals=['a', 'b'],
+    non_terminals=['S'],
+    axiom='S',
+    productions={'S': ['aSb', 'λ']}
+)
+
+grammar.display_grammar()
+
+# Derivar la palabra 'ab'
+print("\nDerivando 'ab':")
+grammar.derive('ab')
+
+
+
+# Ejemplo dos
+grammar_2 = Grammar()
+grammar_2.set_data(
+    terminals=['a', 'b'],
+    non_terminals=['S', 'A'],
+    axiom='S',
+    productions={
+        'S': ['aA', 'bA'],  # Producciones de S
+        'A': ['λ']          # Producción de A
+    }
+)
+
+grammar_2.display_grammar()
+
+# Derivar la palabra 'a'
+print("\nDerivando 'a':")
+grammar_2.derive('a')
+
+# Derivar la palabra vacía
+#print("\nDerivando la cadena vacía:")
+#grammar_2.derive('')
