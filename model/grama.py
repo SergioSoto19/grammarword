@@ -61,7 +61,7 @@ class Grammar:
                         print("la produccion es:" , production)
                        
                         # Si la producción es λ, eliminamos el símbolo no terminal
-                        if production == 'λ':
+                        if production == 'λ' or production == 'ϵ':
                             print("terminal simbolo", symbol)
                             print("esssAntenewna", new_string)
                             new_string = new_string.replace(symbol, '')
