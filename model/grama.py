@@ -55,17 +55,24 @@ class Grammar:
                 return False, steps, productions_used
 
             for i, symbol in enumerate(current_string):
+                print("paaaaaa", current_string)
                 if symbol in self.non_terminals:
                     for production in self.productions[symbol]:
+                        print("la produccion es:" , production)
+                       
                         # Si la producción es λ, eliminamos el símbolo no terminal
                         if production == 'λ':
+                            print("terminal simbolo", symbol)
                             print("esssAntenewna", new_string)
-                            print("esss actual ", current_string)
-                            print("coje el valor antes de la cadena ", current_string[:i])
-                            print("coje el valor despues de la cadena ", current_string[i + 1:])
-                            print("es", i )
-                            new_string = current_string[:i] + current_string[i + 1:]
-                            print("esss", new_string)
+                            new_string = new_string.replace(symbol, '')
+                            #print("esss actual ", current_string)
+                            #print("coje el valor antes de la cadena ", current_string[:i])
+                            #print("coje el valor despues de la cadena ", current_string[i + 1:])
+                            #print("es", i )
+                            #print("esdddd", new_string[:i+1 ] +new_string[i +2:])
+                            #new_string = new_string[:i] + current_string[i + 1:]
+                           # new_string = new_string[:i+1 ] +new_string[i +2:]
+                           # print("esss", new_string)
                         else:
                             new_string = current_string[:i] + production + current_string[i + 1:]
 
@@ -94,7 +101,7 @@ class Grammar:
         return derivations, success
 
 
-
+"""
 # Ejemplo de uso
 grammar = Grammar()
 grammar.set_data(
@@ -133,3 +140,22 @@ grammar_2.derive('a')
 # Derivar la palabra vacía
 #print("\nDerivando la cadena vacía:")
 #grammar_2.derive('')
+
+
+#ejemplo 3
+
+grammar_3  = Grammar()
+grammar_3.set_data(
+    terminals=['a', 'b'],
+    non_terminals=['S,A,B'],
+    axiom='S',
+    productions={'S': ['aAB','aA','λ'],
+                 'B':['bB','λ']}
+)
+
+grammar_3.display_grammar()
+
+# Derivar la palabra 'a'
+print("\nDerivando 'a':")
+grammar_3.derive('ab')
+"""
