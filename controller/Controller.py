@@ -1,4 +1,6 @@
 from PyQt6 import QtWidgets, QtCore
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
+
 
 class Controller:
     def __init__(self, ui, model):
@@ -10,7 +12,8 @@ class Controller:
     def connect_signals(self):
         self.ui.pushButton_generate_gra.clicked.connect(self.generate_grammar)
         self.ui.pushButton_validate_W.clicked.connect(self.validate_word)
-        self.ui.pushButton_deriva_2.clicked.connect(self.reset_interface) 
+        self.ui.pushButton_deriva_2.clicked.connect(self.reset_interface)
+        self.ui.pushButton_load_gra.clicked.connect(self.load_grammar_file)
 
     def generate_grammar(self):
         terminals = self.ui.lineEdit_Terminal.text().split(',')
@@ -72,6 +75,54 @@ class Controller:
         self.model.set_data([], [], "", {})
         self.grammar_saved = False
 
+    def load_grammar_file(self):
+        # Abrir cuadro de diálogo para seleccionar el archivo
+        file_name, _ = QFileDialog.getOpenFileName(None, "Seleccionar archivo de gramática", "", "Text Files (*.txt);;All Files (*)")
+
+        if file_name:
+            try:
+                # Leer el archivo seleccionado
+                with open(file_name, 'r') as file:
+                    grammar_text = file.read()
+
+                    # Parsear las producciones desde el archivo de texto
+                    self.parse_grammar(grammar_text)
+
+                    # Actualizar la interfaz con la nueva gramática cargada
+                    self.update_grammar_display()
+
+            except Exception as e:
+                # Mostrar un mensaje de error si ocurre una excepción
+                QMessageBox.critical(None, "Error", f"No se pudo leer el archivo: {e}")
+
+    def parse_grammar(self, grammar_text):
+        lines = grammar_text.splitlines()
+
+        terminals = set()
+        non_terminals = set()
+        productions = {}
+
+        for line in lines:
+            if '->' in line:
+                left, right = line.split('->')
+                left = left.strip()
+                non_terminals.add(left)  # Agregar no terminal
+                rhs_productions = [r.strip() for r in right.split('|')]
+
+                for production in rhs_productions:
+                    # Identificar terminales en la producción
+                    for symbol in production:
+                        if symbol.islower() or symbol.isdigit():
+                            terminals.add(symbol)
+                    # Agregar la producción al modelo
+                    self.model.add_production(left, production)
+
+        # Establecer datos en el modelo
+        self.model.set_data(list(terminals), list(non_terminals), 'S', self.model.productions)  # 'S' como axioma predeterminado
+        self.grammar_saved = True 
+
+
+    
         
     def update_table_widget(self, derivations):
         self.ui.tableWidget.setRowCount(len(derivations))

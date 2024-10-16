@@ -57,7 +57,7 @@ class Grammar:
             for i, symbol in enumerate(current_string):
                 print("paaaaaa", current_string)
                 if symbol in self.non_terminals:
-                    for production in self.productions[symbol]:
+                    for production in self.productions[symbol]: 
                         print("la produccion es:" , production)
                        
                         # Si la producción es λ, eliminamos el símbolo no terminal

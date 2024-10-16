@@ -201,6 +201,14 @@ class Ui_MainWindow(object):
         self.pushButton_generate_gra.setObjectName("pushButton_generate_gra")
         self.pushButton_generate_gra.setStyleSheet(QPushButton_stile)
 
+
+        self.pushButton_load_gra = QtWidgets.QPushButton(parent=self.widget)
+        self.pushButton_load_gra.setGeometry(QtCore.QRect(450, 160, 221, 31))
+        self.pushButton_load_gra.setStyleSheet("font-size: 15px")
+        self.pushButton_load_gra.setIconSize(QtCore.QSize(100, 100))
+        self.pushButton_load_gra.setObjectName("pushButton_generate_gra")
+        self.pushButton_load_gra.setStyleSheet(QPushButton_stile)
+
         self.lineEdit_nterminal_ = QtWidgets.QLineEdit(parent=self.widget)
         self.lineEdit_nterminal_.setGeometry(QtCore.QRect(370, 60, 331, 21))
         self.lineEdit_nterminal_.setObjectName("lineEdit_nterminal_")
@@ -292,6 +300,7 @@ class Ui_MainWindow(object):
         self.lab_axiom.setText(_translate("MainWindow", "Axioma S"))
         self.lab_produ.setText(_translate("MainWindow", "Producciones"))
         self.pushButton_generate_gra.setText(_translate("MainWindow", "Guardar gramatica"))
+        self.pushButton_load_gra.setText(_translate("MainWindow", "Cargar Gramatica"))
         self.labe_Terminal_2.setText(_translate("MainWindow", "Insertar Palabra "))
         self.pushButton_validate_W.setText(_translate("MainWindow", "Validar Palabra"))
         self.labe_Terminal_4.setText(_translate("MainWindow", ""))
