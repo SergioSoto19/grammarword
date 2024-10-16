@@ -82,7 +82,7 @@ class Controller:
         if file_name:
             try:
                 # Leer el archivo seleccionado
-                with open(file_name, 'r') as file:
+                with open(file_name, 'r', encoding='utf-8') as file:
                     grammar_text = file.read()
 
                     # Parsear las producciones desde el archivo de texto
@@ -119,6 +119,7 @@ class Controller:
 
         # Establecer datos en el modelo
         self.model.set_data(list(terminals), list(non_terminals), 'S', self.model.productions)  # 'S' como axioma predeterminado
+        print(self.model.productions)
         self.grammar_saved = True 
 
 
